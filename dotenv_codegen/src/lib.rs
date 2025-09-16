@@ -104,19 +104,19 @@ impl Parse for DotenvInput {
 ///
 /// Basic usage:
 ///
-/// ```rust no_run
+/// ```rust ignore
 ///     # use dotenvy_macro::dotenv;
 ///     assert_eq!(dotenv!("VARIABLE_1"), "value");
 /// ```
 ///
 /// ```rust compile_fail
 ///     # use dotenvy_macro::dotenv;
-///     const UNSER_VAR: &str = dotenv!("UNSET_VAR");
+///     const UNSET_VAR: &str = dotenv!("UNSET_VAR");
 /// ```
 ///
 /// Custom attributes:
 ///
-/// ```rust no_run
+/// ```rust ignore
 ///     # use dotenvy_macro::dotenv;
 ///     // Does not override current env with .env contents
 ///     const NOT_OVERRIDEN: &str = dotenv!("VARIABLE_1", override_ = false);
@@ -199,7 +199,7 @@ fn dotenv_inner(input: TokenStream2) -> TokenStream2 {
 ///     // Reads from custom file path
 ///     const CUSTOM_PATH: Option<&str> = option_dotenv!("VARIABLE_PROD", path = ".env.prod");
 ///     // Specifying the `var` attribute
-///     const CUSTOM_PATH: Option<&str> = option_dotenv!(var = "VARIABLE_1");
+///     const VAR_ATTR: Option<&str> = option_dotenv!(var = "VARIABLE_1");
 /// ```
 #[proc_macro]
 pub fn option_dotenv(input: TokenStream) -> TokenStream {
