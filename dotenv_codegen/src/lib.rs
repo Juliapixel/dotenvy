@@ -157,6 +157,17 @@ fn dotenv_inner(input: TokenStream2) -> TokenStream2 {
             }
         }
         Err(e) => {
+            if let dotenvy::Error::Io(ioe, _) = e {
+                if ioe.kind() == io::ErrorKind::NotFound {
+                    if let Ok(var) = std::env::var(&var_name) {
+                        return quote!(#var);
+                    } else {
+                        return quote! {
+                            compile_error!("environment variable not set and env file missing")
+                        };
+                    }
+                }
+            }
             let msg = e.to_string();
             quote! {
                 compile_error!(#msg)
@@ -220,15 +231,19 @@ fn option_dotenv_inner(input: TokenStream2) -> TokenStream2 {
     };
 
     let path = args.path.map_or_else(|| "./.env".to_owned(), |p| p.value());
+    let var_name = args.var_name.value();
 
     let loader = EnvLoader::new().path(&path).sequence(sequence).load();
 
-    match loader.as_ref().map(|l| l.get(&args.var_name.value())) {
+    match loader.as_ref().map(|l| l.get(&var_name)) {
         Ok(Some(v)) => quote!(Some(#v)),
         Ok(None) => quote!(None::<&str>),
         Err(e) => {
             if let dotenvy::Error::Io(ioe, _) = e {
                 if ioe.kind() == io::ErrorKind::NotFound {
+                    if let Ok(var) = std::env::var(&var_name) {
+                        return quote!(Some(#var));
+                    }
                     return quote!(None::<&str>);
                 }
             }
