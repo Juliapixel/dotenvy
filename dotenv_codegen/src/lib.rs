@@ -105,16 +105,19 @@ impl Parse for DotenvInput {
 /// Basic usage:
 ///
 /// ```rust no_run
+///     # use dotenvy_macro::dotenv;
 ///     assert_eq!(dotenv!("VARIABLE_1"), "value");
 /// ```
 ///
 /// ```rust compile_fail
+///     # use dotenvy_macro::dotenv;
 ///     const UNSER_VAR: &str = dotenv!("UNSET_VAR");
 /// ```
 ///
 /// Custom attributes:
 ///
 /// ```rust no_run
+///     # use dotenvy_macro::dotenv;
 ///     // Does not override current env with .env contents
 ///     const NOT_OVERRIDEN: &str = dotenv!("VARIABLE_1", override_ = false);
 ///     // Reads from custom file path
@@ -182,6 +185,7 @@ fn dotenv_inner(input: TokenStream2) -> TokenStream2 {
 /// Basic usage:
 ///
 /// ```rust no_run
+///     # use dotenvy_macro::option_dotenv;
 ///     assert_eq!(option_dotenv!("UNSET_VAR"), None);
 ///     assert_eq!(option_dotenv!("SET_VAR"), Some("value"));
 /// ```
@@ -189,6 +193,7 @@ fn dotenv_inner(input: TokenStream2) -> TokenStream2 {
 /// Custom attributes:
 ///
 /// ```rust no_run
+///     # use dotenvy_macro::option_dotenv;
 ///     // Does not override current env with .env contents
 ///     const NOT_OVERRIDEN: Option<&str> = option_dotenv!("VARIABLE_1", override_ = false);
 ///     // Reads from custom file path
